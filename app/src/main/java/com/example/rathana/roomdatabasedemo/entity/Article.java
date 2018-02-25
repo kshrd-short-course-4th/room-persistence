@@ -17,4 +17,15 @@ public class Article {
     public int categoryId;
     @ColumnInfo(name = "author_id")
     public int authorId;
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", categoryId=" + categoryId +
+                ", authorId=" + authorId +
+                '}';
+    }
 }
