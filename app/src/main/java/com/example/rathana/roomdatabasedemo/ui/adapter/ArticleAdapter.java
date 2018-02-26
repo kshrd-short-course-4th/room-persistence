@@ -2,7 +2,6 @@ package com.example.rathana.roomdatabasedemo.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,35 +24,35 @@ import butterknife.ButterKnife;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>{
     private List<CategoryArticle> articles;
     private Context context;
-
+    private static final String TAG = "ArticleAdapter";
+    ArticleAdapterCallback callback;
     public ArticleAdapter(List<CategoryArticle> articles, Context context) {
         this.articles = articles;
         this.context = context;
+        this.callback= (ArticleAdapterCallback) context;
+        //Log.e(TAG, "ArticleAdapter: "+this.articles.size());
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.articla_item_layout,parent,false);
+        View view= LayoutInflater.from(context).inflate(R.layout.article_item_layout,parent,false);
         return new ViewHolder(view);
     }
 
-    private static final String TAG = "ArticleAdapter";
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CategoryArticle a=articles.get(0);
-        Log.e(TAG, "onBindViewHolder: "+articles.size() );
-        //Log.e(TAG, "onBindViewHolder: "+articles.get(0).toString() );
-        Article article=a.articles.get(position);
+        CategoryArticle categoryArticle=articles.get(0);
+        Article article=categoryArticle.articles.get(position);
         holder.articleThumb.setImageResource(R.drawable.thumbnail);
-        //Log.e(TAG, "onBindViewHolder: "+article.title );
         holder.title.setText(article.title);
     }
+
     @Override
     public int getItemCount() {
         return articles.size();
     }
-    static  class ViewHolder extends RecyclerView.ViewHolder{
+
+    class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.articleThumb)
         ImageView articleThumb;
         @BindView(R.id.tvArticleTitle)
@@ -61,6 +60,18 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onItemClicked(articles.get(0).articles.get(getAdapterPosition()));
+                }
+            });
+
+
         }
+    }
+
+    public interface ArticleAdapterCallback{
+        void onItemClicked(Article article);
     }
 }
